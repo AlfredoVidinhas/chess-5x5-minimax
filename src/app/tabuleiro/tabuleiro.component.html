@@ -1,0 +1,13 @@
+<div class="tabuleiro">
+  <div class="row" *ngFor="let item of Tabuleiro let i = index">
+    <div class="column" *ngFor="let subitem of item let j = index" [class.active]="subitem.active">
+      <div class="img" innerHTML="{{
+          !subitem.Vazio?
+          (subitem.Posicao.X == j && subitem.Posicao.Y == i ? subitem.Peca : ''):(j+'-'+i)
+        }}"
+        [class.sugestao]="subitem.Sugestao"
+        (click)="Selecionar(subitem)">
+      </div>
+    </div>
+  </div>
+</div>

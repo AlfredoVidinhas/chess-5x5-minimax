@@ -1,0 +1,61 @@
+.tabuleiro{
+  display: flex;
+  flex-direction: column;
+  width: 600px;
+  height: 600px;
+}
+
+.row{
+  display: flex;
+  width: 100%;
+}
+
+.row:nth-child(odd){
+  .column:nth-child(odd){
+    background-color: #EDD9B9;
+  }
+  .column:nth-child(even){
+    background-color: #AF8968;
+  }
+}
+
+.row:nth-child(even){
+  .column:nth-child(even){
+    background-color: #EDD9B9;
+  }
+  .column:nth-child(odd){
+    background-color: #AF8968;
+  }
+}
+
+.column{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 120px;
+  height: 120px;
+  position: relative;
+}
+
+.img{
+  font-size: 80px;
+  cursor: pointer;
+}
+
+.active{
+  background-color: red !important;
+}
+
+.sugestao:before{
+  content: '';
+  top: 50%;
+  left: 50%;
+  width: 20px;
+  height: 20px;
+  margin-top: -10px;
+  margin-left: -10px;
+  border-radius: 50%;
+  box-sizing: border-box;
+  position: absolute;
+  background-color: red;
+}
