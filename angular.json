@@ -123,6 +123,10 @@
           }
         }
       }
-    }},
-  "defaultProject": "chess-project"
+    }
+  },
+  "defaultProject": "chess-project",
+  "cli": {
+    "analytics": false
+  }
 }
