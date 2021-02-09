@@ -628,8 +628,10 @@ export class TabuleiroComponent implements OnInit {
   }
 
   LimparSelecao(list:Peca[]) {
-    this.SugestaoList.forEach(element => {
-      element.Sugestao = false;
+    this.Tabuleiro.forEach(rows => {
+      rows.forEach(element => {
+        element.Sugestao = false;
+      });
     });
   }
 
@@ -717,8 +719,6 @@ export class TabuleiroComponent implements OnInit {
       this.Tabuleiro[PY1][PX1] = element;
 
     });
-
-    this.LimparSelecao(list);
 
     return bonsMov;
   }
@@ -821,9 +821,6 @@ export class TabuleiroComponent implements OnInit {
 
       }
 
-      this.LimparSelecao(moves);
-      this.LimparSelecao(newGameMove);
-
     }
 
     return {bestMoveFound, MoveFound};
@@ -891,9 +888,6 @@ export class TabuleiroComponent implements OnInit {
           }
   
         }
-
-        this.LimparSelecao(moves);
-        this.LimparSelecao(newGameMove);
   
       }
       return bestMove;
@@ -940,9 +934,6 @@ export class TabuleiroComponent implements OnInit {
           }
   
         }
-
-        this.LimparSelecao(moves);
-        this.LimparSelecao(newGameMove);
   
       }
 
@@ -953,6 +944,7 @@ export class TabuleiroComponent implements OnInit {
   Game(){
     while(this.isBlackTurn){
       var bestMove = this.minimaxRoot(3, true);
+      this.LimparSelecao([]);
       console.log('best: ', bestMove);
       if(bestMove.bestMoveFound && bestMove.MoveFound){
         const auxPX = bestMove.bestMoveFound.Posicao.X;
