@@ -85,6 +85,8 @@ export class TabuleiroComponent implements OnInit {
 
   Selecionar(peca: Peca) {
 
+    console.log('sugestao: ', this.SugestaoList)
+
     const auxSugestao = this.SugestaoList.filter((x) => x.Posicao.X == peca.Posicao.X && x.Posicao.Y == peca.Posicao.Y);
 
     if (auxSugestao.length > 0) {
@@ -103,7 +105,7 @@ export class TabuleiroComponent implements OnInit {
       
     }
 
-    this.LimparSelecao();
+    this.LimparSelecao(this.SugestaoList);
 
     if (this.isBlackTurn && peca.Cor == 'White') {
       return;
@@ -128,31 +130,33 @@ export class TabuleiroComponent implements OnInit {
 
     switch (peca.Nome) {
       case 'P':
-        this.OpcoesP(PX, PY, peca);
+        this.SugestaoList = this.OpcoesP(PX, PY, peca);
         break;
 
       case 'T':
-        this.OpcoesT(PX, PY, peca);
+        this.SugestaoList = this.OpcoesT(PX, PY, peca);
         break;
 
       case 'C':
-        this.OpcoesC(PX, PY, peca);
+        this.SugestaoList = this.OpcoesC(PX, PY, peca);
         break;
 
       case 'B':
-        this.OpcoesB(PX, PY, peca);
+        this.SugestaoList = this.OpcoesB(PX, PY, peca);
         break;
 
       case 'Re':
-        this.OpcoesRe(PX, PY, peca);
+        this.SugestaoList = this.OpcoesRe(PX, PY, peca);
         break;
       case 'Ra':
-        this.OpcoesRa(PX, PY, peca);
+        this.SugestaoList = this.OpcoesRa(PX, PY, peca);
         break;
     }
   }
 
   OpcoesP(PX, PY, peca) {
+    const list = [];
+
     if (peca.Cor == 'White') {
       //white
       if ((PY - 1) > -1) {
@@ -160,14 +164,14 @@ export class TabuleiroComponent implements OnInit {
         const aux = this.Tabuleiro[peca.Posicao.Y - 1][peca.Posicao.X];
         if (aux.Vazio) {
           aux.Sugestao = true;
-          this.SugestaoList.push(aux);
+          list.push(aux);
         }
         if ((PX + 1) < 5) {
           const aux = this.Tabuleiro[PY - 1][PX + 1];
           if (!aux.Vazio) {
             if (aux.Cor != peca.Cor) {
               aux.Sugestao = true;
-              this.SugestaoList.push(aux);
+              list.push(aux);
             }
           }
         }
@@ -176,7 +180,7 @@ export class TabuleiroComponent implements OnInit {
           if (!aux.Vazio) {
             if (aux.Cor != peca.Cor) {
               aux.Sugestao = true;
-              this.SugestaoList.push(aux);
+              list.push(aux);
             }
           }
         }
@@ -188,14 +192,14 @@ export class TabuleiroComponent implements OnInit {
         const aux = this.Tabuleiro[peca.Posicao.Y + 1][peca.Posicao.X];
         if (aux.Vazio) {
           aux.Sugestao = true;
-          this.SugestaoList.push(aux);
+          list.push(aux);
         }
         if ((PX + 1) < 5) {
           const aux = this.Tabuleiro[PY + 1][PX + 1];
           if (!aux.Vazio) {
             if (aux.Cor != peca.Cor) {
               aux.Sugestao = true;
-              this.SugestaoList.push(aux);
+              list.push(aux);
             }
           }
         }
@@ -204,27 +208,28 @@ export class TabuleiroComponent implements OnInit {
           if (!aux.Vazio) {
             if (aux.Cor != peca.Cor) {
               aux.Sugestao = true;
-              this.SugestaoList.push(aux);
+              list.push(aux);
             }
           }
         }
       }
     }
+    return list;
   }
 
   OpcoesT(PX, PY, peca) {
-
+    const list = [];
     // Para cima
     for (let i = PY - 1; i > -1; i--) {
       const auxPeca = this.Tabuleiro[i][PX];
       if (auxPeca.Vazio) {
         auxPeca.Sugestao = true;
-        this.SugestaoList.push(auxPeca);
+        list.push(auxPeca);
       }
       else {
         if (auxPeca.Cor != peca.Cor) {
           auxPeca.Sugestao = true;
-          this.SugestaoList.push(auxPeca);
+          list.push(auxPeca);
           break;
         }
         if (auxPeca.Cor == peca.Cor) {
@@ -238,12 +243,12 @@ export class TabuleiroComponent implements OnInit {
       const auxPeca = this.Tabuleiro[i][PX];
       if (auxPeca.Vazio) {
         auxPeca.Sugestao = true;
-        this.SugestaoList.push(auxPeca);
+        list.push(auxPeca);
       }
       else {
         if (auxPeca.Cor != peca.Cor) {
           auxPeca.Sugestao = true;
-          this.SugestaoList.push(auxPeca);
+          list.push(auxPeca);
           break;
         }
         if (auxPeca.Cor == peca.Cor) {
@@ -257,12 +262,12 @@ export class TabuleiroComponent implements OnInit {
       const auxPeca = this.Tabuleiro[PY][i];
       if (auxPeca.Vazio) {
         auxPeca.Sugestao = true;
-        this.SugestaoList.push(auxPeca);
+        list.push(auxPeca);
       }
       else {
         if (auxPeca.Cor != peca.Cor) {
           auxPeca.Sugestao = true;
-          this.SugestaoList.push(auxPeca);
+          list.push(auxPeca);
           break;
         }
         if (auxPeca.Cor == peca.Cor) {
@@ -276,12 +281,12 @@ export class TabuleiroComponent implements OnInit {
       const auxPeca = this.Tabuleiro[PY][i];
       if (auxPeca.Vazio) {
         auxPeca.Sugestao = true;
-        this.SugestaoList.push(auxPeca);
+        list.push(auxPeca);
       }
       else {
         if (auxPeca.Cor != peca.Cor) {
           auxPeca.Sugestao = true;
-          this.SugestaoList.push(auxPeca);
+          list.push(auxPeca);
           break;
         }
         if (auxPeca.Cor == peca.Cor) {
@@ -289,9 +294,12 @@ export class TabuleiroComponent implements OnInit {
         }
       }
     }
+
+    return list;
   }
 
   OpcoesC(PX, PY, peca) {
+    const list = [];
     // Para cima
     if (PY - 2 > -1) {
       // Esquerda
@@ -300,7 +308,7 @@ export class TabuleiroComponent implements OnInit {
         const auxPeca = this.Tabuleiro[PY - 2][PX - 1];
         if (auxPeca.Cor != peca.Cor) {
           auxPeca.Sugestao = true;
-          this.SugestaoList.push(auxPeca);
+          list.push(auxPeca);
         }
       }
 
@@ -310,7 +318,7 @@ export class TabuleiroComponent implements OnInit {
         const auxPeca = this.Tabuleiro[PY - 2][PX + 1];
         if (auxPeca.Cor != peca.Cor) {
           auxPeca.Sugestao = true;
-          this.SugestaoList.push(auxPeca);
+          list.push(auxPeca);
         }
       }
     }
@@ -323,7 +331,7 @@ export class TabuleiroComponent implements OnInit {
         const auxPeca = this.Tabuleiro[PY + 2][PX - 1];
         if (auxPeca.Cor != peca.Cor) {
           auxPeca.Sugestao = true;
-          this.SugestaoList.push(auxPeca);
+          list.push(auxPeca);
         }
       }
 
@@ -333,7 +341,7 @@ export class TabuleiroComponent implements OnInit {
         const auxPeca = this.Tabuleiro[PY + 2][PX + 1];
         if (auxPeca.Cor != peca.Cor) {
           auxPeca.Sugestao = true;
-          this.SugestaoList.push(auxPeca);
+          list.push(auxPeca);
         }
       }
     }
@@ -346,7 +354,7 @@ export class TabuleiroComponent implements OnInit {
         const auxPeca = this.Tabuleiro[PY - 1][PX + 2];
         if (auxPeca.Cor != peca.Cor) {
           auxPeca.Sugestao = true;
-          this.SugestaoList.push(auxPeca);
+          list.push(auxPeca);
         }
       }
 
@@ -356,7 +364,7 @@ export class TabuleiroComponent implements OnInit {
         const auxPeca = this.Tabuleiro[PY + 1][PX + 2];
         if (auxPeca.Cor != peca.Cor) {
           auxPeca.Sugestao = true;
-          this.SugestaoList.push(auxPeca);
+          list.push(auxPeca);
         }
       }
     }
@@ -369,7 +377,7 @@ export class TabuleiroComponent implements OnInit {
         const auxPeca = this.Tabuleiro[PY - 1][PX - 2];
         if (auxPeca.Cor != peca.Cor) {
           auxPeca.Sugestao = true;
-          this.SugestaoList.push(auxPeca);
+          list.push(auxPeca);
         }
       }
 
@@ -379,15 +387,17 @@ export class TabuleiroComponent implements OnInit {
         const auxPeca = this.Tabuleiro[PY + 1][PX - 2];
         if (auxPeca.Cor != peca.Cor) {
           auxPeca.Sugestao = true;
-          this.SugestaoList.push(auxPeca);
+          list.push(auxPeca);
         }
       }
     }
 
+    return list;
+
   }
 
   OpcoesB(PX, PY, peca) {
-
+    const list = [];
     let auxPY = PY - 1;
     //Para cima Esquerda
     for (let i = PX - 1; i > -1; i--) {
@@ -397,12 +407,12 @@ export class TabuleiroComponent implements OnInit {
       const auxPeca = this.Tabuleiro[auxPY][i];
       if (auxPeca.Vazio) {
         auxPeca.Sugestao = true;
-        this.SugestaoList.push(auxPeca);
+        list.push(auxPeca);
       }
       else {
         if (auxPeca.Cor != peca.Cor) {
           auxPeca.Sugestao = true;
-          this.SugestaoList.push(auxPeca);
+          list.push(auxPeca);
           break;
         }
         else {
@@ -421,12 +431,12 @@ export class TabuleiroComponent implements OnInit {
       const auxPeca = this.Tabuleiro[auxPY][i];
       if (auxPeca.Vazio) {
         auxPeca.Sugestao = true;
-        this.SugestaoList.push(auxPeca);
+        list.push(auxPeca);
       }
       else {
         if (auxPeca.Cor != peca.Cor) {
           auxPeca.Sugestao = true;
-          this.SugestaoList.push(auxPeca);
+          list.push(auxPeca);
           break;
         }
         else {
@@ -445,12 +455,12 @@ export class TabuleiroComponent implements OnInit {
       const auxPeca = this.Tabuleiro[i][auxPX];
       if (auxPeca.Vazio) {
         auxPeca.Sugestao = true;
-        this.SugestaoList.push(auxPeca);
+        list.push(auxPeca);
       }
       else {
         if (auxPeca.Cor != peca.Cor) {
           auxPeca.Sugestao = true;
-          this.SugestaoList.push(auxPeca);
+          list.push(auxPeca);
           break;
         }
         else {
@@ -469,12 +479,12 @@ export class TabuleiroComponent implements OnInit {
       const auxPeca = this.Tabuleiro[i][auxPX];
       if (auxPeca.Vazio) {
         auxPeca.Sugestao = true;
-        this.SugestaoList.push(auxPeca);
+        list.push(auxPeca);
       }
       else {
         if (auxPeca.Cor != peca.Cor) {
           auxPeca.Sugestao = true;
-          this.SugestaoList.push(auxPeca);
+          list.push(auxPeca);
           break;
         }
         else {
@@ -484,9 +494,13 @@ export class TabuleiroComponent implements OnInit {
       auxPX--;
     }
 
+    return list;
   }
 
   OpcoesRe(PX, PY, peca) {
+
+    const list = [];
+
     let auxPeca;
 
     // Para cima
@@ -494,12 +508,12 @@ export class TabuleiroComponent implements OnInit {
       auxPeca = this.Tabuleiro[PY - 1][PX];
       if (auxPeca.Vazio) {
         auxPeca.Sugestao = true;
-        this.SugestaoList.push(auxPeca);
+        list.push(auxPeca);
       }
       else {
         if (auxPeca.Cor != peca.Cor) {
           auxPeca.Sugestao = true;
-          this.SugestaoList.push(auxPeca);
+          list.push(auxPeca);
         }
       }
     }
@@ -509,12 +523,12 @@ export class TabuleiroComponent implements OnInit {
       auxPeca = this.Tabuleiro[PY][PX - 1];
       if (auxPeca.Vazio) {
         auxPeca.Sugestao = true;
-        this.SugestaoList.push(auxPeca);
+        list.push(auxPeca);
       }
       else {
         if (auxPeca.Cor != peca.Cor) {
           auxPeca.Sugestao = true;
-          this.SugestaoList.push(auxPeca);
+          list.push(auxPeca);
         }
       }
     }
@@ -524,12 +538,12 @@ export class TabuleiroComponent implements OnInit {
       auxPeca = this.Tabuleiro[PY - 1][PX - 1];
       if (auxPeca.Vazio) {
         auxPeca.Sugestao = true;
-        this.SugestaoList.push(auxPeca);
+        list.push(auxPeca);
       }
       else {
         if (auxPeca.Cor != peca.Cor) {
           auxPeca.Sugestao = true;
-          this.SugestaoList.push(auxPeca);
+          list.push(auxPeca);
         }
       }
     }
@@ -539,12 +553,12 @@ export class TabuleiroComponent implements OnInit {
       auxPeca = this.Tabuleiro[PY - 1][PX + 1];
       if (auxPeca.Vazio) {
         auxPeca.Sugestao = true;
-        this.SugestaoList.push(auxPeca);
+        list.push(auxPeca);
       }
       else {
         if (auxPeca.Cor != peca.Cor) {
           auxPeca.Sugestao = true;
-          this.SugestaoList.push(auxPeca);
+          list.push(auxPeca);
         }
       }
     }
@@ -554,12 +568,12 @@ export class TabuleiroComponent implements OnInit {
       auxPeca = this.Tabuleiro[PY + 1][PX + 1];
       if (auxPeca.Vazio) {
         auxPeca.Sugestao = true;
-        this.SugestaoList.push(auxPeca);
+        list.push(auxPeca);
       }
       else {
         if (auxPeca.Cor != peca.Cor) {
           auxPeca.Sugestao = true;
-          this.SugestaoList.push(auxPeca);
+          list.push(auxPeca);
         }
       }
     }
@@ -569,12 +583,12 @@ export class TabuleiroComponent implements OnInit {
       auxPeca = this.Tabuleiro[PY + 1][PX - 1];
       if (auxPeca.Vazio) {
         auxPeca.Sugestao = true;
-        this.SugestaoList.push(auxPeca);
+        list.push(auxPeca);
       }
       else {
         if (auxPeca.Cor != peca.Cor) {
           auxPeca.Sugestao = true;
-          this.SugestaoList.push(auxPeca);
+          list.push(auxPeca);
         }
       }
     }
@@ -584,12 +598,12 @@ export class TabuleiroComponent implements OnInit {
       auxPeca = this.Tabuleiro[PY + 1][PX];
       if (auxPeca.Vazio) {
         auxPeca.Sugestao = true;
-        this.SugestaoList.push(auxPeca);
+        list.push(auxPeca);
       }
       else {
         if (auxPeca.Cor != peca.Cor) {
           auxPeca.Sugestao = true;
-          this.SugestaoList.push(auxPeca);
+          list.push(auxPeca);
         }
       }
     }
@@ -599,28 +613,30 @@ export class TabuleiroComponent implements OnInit {
       auxPeca = this.Tabuleiro[PY][PX + 1];
       if (auxPeca.Vazio) {
         auxPeca.Sugestao = true;
-        this.SugestaoList.push(auxPeca);
+        list.push(auxPeca);
       }
       else {
         if (auxPeca.Cor != peca.Cor) {
           auxPeca.Sugestao = true;
-          this.SugestaoList.push(auxPeca);
+          list.push(auxPeca);
         }
       }
     }
 
+    return list;
+
   }
 
-  LimparSelecao() {
+  LimparSelecao(list:Peca[]) {
     this.SugestaoList.forEach(element => {
       element.Sugestao = false;
     });
-    this.SugestaoList = [];
   }
 
   OpcoesRa(PX, PY, peca) {
-    this.OpcoesT(PX, PY, peca);
-    this.OpcoesB(PX, PY, peca);
+    const aux = this.OpcoesT(PX, PY, peca);
+    const aux1 = this.OpcoesB(PX, PY, peca);
+    return aux.concat(aux1);
   }
 
   isInCheck(cor: string){
@@ -636,37 +652,42 @@ export class TabuleiroComponent implements OnInit {
     return false;
   }
 
-  async BonsMovimentos(peca: Peca){
+  BonsMovimentos(peca: Peca){
+
+    let list = [];
+
     console.log('PecaIn: ', peca);
     switch(peca.Nome){
       case 'P':
-        await this.OpcoesP(peca.Posicao.X, peca.Posicao.Y, peca);
+        list =  this.OpcoesP(peca.Posicao.X, peca.Posicao.Y, peca);
         break;
 
       case 'T':
-        await this.OpcoesT(peca.Posicao.X, peca.Posicao.Y, peca);
+        list =  this.OpcoesT(peca.Posicao.X, peca.Posicao.Y, peca);
         break;
 
       case 'C':
-        await this.OpcoesC(peca.Posicao.X, peca.Posicao.Y, peca);
+        list =  this.OpcoesC(peca.Posicao.X, peca.Posicao.Y, peca);
         break;
 
       case 'B':
-        await this.OpcoesB(peca.Posicao.X, peca.Posicao.Y, peca);
+        list =  this.OpcoesB(peca.Posicao.X, peca.Posicao.Y, peca);
         break;
 
       case 'Re':
-        await this.OpcoesRe(peca.Posicao.X, peca.Posicao.Y, peca);
+        list =  this.OpcoesRe(peca.Posicao.X, peca.Posicao.Y, peca);
         break;
 
       case 'Ra':
-        await this.OpcoesRa(peca.Posicao.X, peca.Posicao.Y, peca);
+        list =  this.OpcoesRa(peca.Posicao.X, peca.Posicao.Y, peca);
         break;
     }
 
     const bonsMov = [];
 
-    this.SugestaoList.forEach(element => {
+    console.log('### list: ' + list)
+
+    list.forEach(element => {
       const PX = peca.Posicao.X;
       const PY = peca.Posicao.Y;
       const PX1 = element.Posicao.X;
@@ -697,7 +718,7 @@ export class TabuleiroComponent implements OnInit {
 
     });
 
-    this.LimparSelecao();
+    this.LimparSelecao(list);
 
     return bonsMov;
   }
@@ -752,16 +773,16 @@ export class TabuleiroComponent implements OnInit {
 
   // Novo
 
-  async minimaxRoot(depth, isMaximisingPlayer){
+  minimaxRoot(depth, isMaximisingPlayer){
     const cor = isMaximisingPlayer? 'Black' : 'White';
     let newGameMoves = this.GetAllPecaByColor(cor);
-    let bestMove = -9999;
+    let bestMove = -29;
     let bestMoveFound;
     let MoveFound;
 
     for(let i = 0; i < newGameMoves.length; i++) {
       let newGameMove = newGameMoves[i];
-      const moves = await this.BonsMovimentos(newGameMove);
+      const moves = this.BonsMovimentos(newGameMove);
 
       for(let j = 0; j < moves.length; j++) {
         let move = moves[j];
@@ -780,7 +801,7 @@ export class TabuleiroComponent implements OnInit {
         this.Tabuleiro[PY1][PX1] = newGameMove;
         this.Tabuleiro[PY][PX] = move;
 
-        let value = await this.minimax(depth - 1, -10000, 10000, !isMaximisingPlayer);
+        let value = this.minimax(depth - 1, -10000, 10000, !isMaximisingPlayer);
 
         // go back
         newGameMove.Posicao.X = PX;
@@ -800,6 +821,9 @@ export class TabuleiroComponent implements OnInit {
 
       }
 
+      this.LimparSelecao(moves);
+      this.LimparSelecao(newGameMove);
+
     }
 
     return {bestMoveFound, MoveFound};
@@ -816,7 +840,7 @@ export class TabuleiroComponent implements OnInit {
     return totalEvaluation;
   }
 
-  async minimax(depth, alpha, beta, isMaximisingPlayer){
+  minimax(depth, alpha, beta, isMaximisingPlayer){
     if (depth === 0) {
       return -this.evaluateBoard();
     }
@@ -826,11 +850,11 @@ export class TabuleiroComponent implements OnInit {
     let newGameMoves = this.GetAllPecaByColor(cor);
 
     if (isMaximisingPlayer) {
-      let bestMove = -9999;
+      let bestMove = -29;
 
       for(let i = 0; i < newGameMoves.length; i++) {
         let newGameMove = newGameMoves[i];
-        const moves = await this.BonsMovimentos(newGameMove);
+        const moves = this.BonsMovimentos(newGameMove);
   
         for(let j = 0; j < moves.length; j++) {
           let move = moves[j];
@@ -849,7 +873,7 @@ export class TabuleiroComponent implements OnInit {
           this.Tabuleiro[PY1][PX1] = newGameMove;
           this.Tabuleiro[PY][PX] = move;
   
-          bestMove = Math.max(bestMove, await this.minimax(depth - 1, alpha, beta, !isMaximisingPlayer));
+          bestMove = Math.max(bestMove, this.minimax(depth - 1, alpha, beta, !isMaximisingPlayer));
   
           // go back
           newGameMove.Posicao.X = PX;
@@ -867,6 +891,9 @@ export class TabuleiroComponent implements OnInit {
           }
   
         }
+
+        this.LimparSelecao(moves);
+        this.LimparSelecao(newGameMove);
   
       }
       return bestMove;
@@ -876,7 +903,7 @@ export class TabuleiroComponent implements OnInit {
 
       for(let i = 0; i < newGameMoves.length; i++) {
         let newGameMove = newGameMoves[i];
-        const moves = await this.BonsMovimentos(newGameMove);
+        const moves = this.BonsMovimentos(newGameMove);
   
         for(let j = 0; j < moves.length; j++) {
           let move = moves[j];
@@ -895,7 +922,7 @@ export class TabuleiroComponent implements OnInit {
           this.Tabuleiro[PY1][PX1] = newGameMove;
           this.Tabuleiro[PY][PX] = move;
   
-          bestMove = Math.min(bestMove, await this.minimax(depth - 1, alpha, beta, !isMaximisingPlayer));
+          bestMove = Math.min(bestMove, this.minimax(depth - 1, alpha, beta, !isMaximisingPlayer));
   
           // go back
           newGameMove.Posicao.X = PX;
@@ -913,6 +940,9 @@ export class TabuleiroComponent implements OnInit {
           }
   
         }
+
+        this.LimparSelecao(moves);
+        this.LimparSelecao(newGameMove);
   
       }
 
@@ -920,9 +950,9 @@ export class TabuleiroComponent implements OnInit {
     }
   }
 
-  async Game(){
+  Game(){
     while(this.isBlackTurn){
-      var bestMove = await this.minimaxRoot(3, true);
+      var bestMove = this.minimaxRoot(3, true);
       console.log('best: ', bestMove);
       if(bestMove.bestMoveFound && bestMove.MoveFound){
         const auxPX = bestMove.bestMoveFound.Posicao.X;
