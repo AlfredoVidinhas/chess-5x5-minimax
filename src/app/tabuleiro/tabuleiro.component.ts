@@ -68,6 +68,21 @@ export class TabuleiroComponent implements OnInit {
     }
   }
 
+  PosYNumber(Y:number){
+    switch(Y){
+      case 0:
+        return '5';
+      case 1:
+        return '4';
+      case 2:
+        return '3';
+      case 3:
+        return '2'
+      case 4:
+        return '1';
+    }
+  }
+
   Selecionar(peca: Peca) {
 
     const auxSugestao = this.SugestaoList.filter((x) => x.Posicao.X == peca.Posicao.X && x.Posicao.Y == peca.Posicao.Y);
@@ -82,9 +97,9 @@ export class TabuleiroComponent implements OnInit {
       this.isBlackTurn = true;
 
       // colocar no arquivo
-      this.File1 = this.File1 + this.PosXLetra(auxPX) + auxPY + this.PosXLetra(peca.Posicao.X) + peca.Posicao.Y + '\n';
-      this.File2 = this.File2 + 'White played ' + this.PosXLetra(auxPX) + auxPY + this.PosXLetra(peca.Posicao.X) + peca.Posicao.Y + '\n';
-      setTimeout( () => { this.Game(); }, 1000 );
+      this.File1 = this.File1 + this.PosXLetra(auxPX) + this.PosYNumber(auxPY) + this.PosXLetra(peca.Posicao.X) + this.PosYNumber(peca.Posicao.Y) + '\n';
+      this.File2 = this.File2 + 'White played ' + this.PosXLetra(auxPX) + this.PosYNumber(auxPY) + this.PosXLetra(peca.Posicao.X) + this.PosYNumber(peca.Posicao.Y) + '\n';
+      setTimeout( () => { this.Game(); }, 250 );
       
     }
 
@@ -609,7 +624,7 @@ export class TabuleiroComponent implements OnInit {
   }
 
   isInCheck(cor: string){
-    const pecasWhites = this.GetAllPecaByColor('White');
+    const pecasWhites = this.GetAllPecaByColor(cor);
 
     for(let i = 0; i < pecasWhites.length; i++){
       this.OpcoesDeMovimentacao(pecasWhites[i]);
@@ -621,31 +636,31 @@ export class TabuleiroComponent implements OnInit {
     return false;
   }
 
-  BonsMovimentos(peca: Peca){
+  async BonsMovimentos(peca: Peca){
     console.log('PecaIn: ', peca);
     switch(peca.Nome){
       case 'P':
-        this.OpcoesP(peca.Posicao.X, peca.Posicao.Y, peca);
+        await this.OpcoesP(peca.Posicao.X, peca.Posicao.Y, peca);
         break;
 
       case 'T':
-        this.OpcoesT(peca.Posicao.X, peca.Posicao.Y, peca);
+        await this.OpcoesT(peca.Posicao.X, peca.Posicao.Y, peca);
         break;
 
       case 'C':
-        this.OpcoesC(peca.Posicao.X, peca.Posicao.Y, peca);
+        await this.OpcoesC(peca.Posicao.X, peca.Posicao.Y, peca);
         break;
 
       case 'B':
-        this.OpcoesB(peca.Posicao.X, peca.Posicao.Y, peca);
+        await this.OpcoesB(peca.Posicao.X, peca.Posicao.Y, peca);
         break;
 
       case 'Re':
-        this.OpcoesRe(peca.Posicao.X, peca.Posicao.Y, peca);
+        await this.OpcoesRe(peca.Posicao.X, peca.Posicao.Y, peca);
         break;
 
       case 'Ra':
-        this.OpcoesRa(peca.Posicao.X, peca.Posicao.Y, peca);
+        await this.OpcoesRa(peca.Posicao.X, peca.Posicao.Y, peca);
         break;
     }
 
@@ -666,7 +681,7 @@ export class TabuleiroComponent implements OnInit {
       this.Tabuleiro[PY1][PX1] = peca;
       this.Tabuleiro[PY][PX] = element;
 
-      if(!this.isInCheck(peca.Cor)){
+      if(!this.isInCheck(peca.Cor=='White'?'Black':'White')){
         bonsMov.push(element);
       }
 
@@ -689,7 +704,7 @@ export class TabuleiroComponent implements OnInit {
 
   /// minimax
 
-  GetPecaValor(peca: Peca){
+  GetPecaValor(peca: Peca, y, x){
     if (peca.Vazio) {
       return 0;
     }
@@ -697,22 +712,22 @@ export class TabuleiroComponent implements OnInit {
     let absoluteValue;
     switch(peca.Nome){
       case 'P':
-        absoluteValue = 10;
+        absoluteValue = 1
 
       case 'T':
-        absoluteValue = 50;
+        absoluteValue = 5
 
       case 'C':
-        absoluteValue = 30;
+        absoluteValue = 3
 
       case 'B':
-        absoluteValue = 30;
+        absoluteValue = 3
 
       case 'Re':
-        absoluteValue = 900;
+        absoluteValue = 0
 
       case 'Ra':
-        absoluteValue = 90;
+        absoluteValue = 9
     }
 
     return peca.Cor == 'White' ? absoluteValue : -absoluteValue;
@@ -737,15 +752,16 @@ export class TabuleiroComponent implements OnInit {
 
   // Novo
 
-  minimaxRoot(depth, isMaximisingPlayer){
-    let newGameMoves = this.GetAllPecaByColor('Black');
+  async minimaxRoot(depth, isMaximisingPlayer){
+    const cor = isMaximisingPlayer? 'Black' : 'White';
+    let newGameMoves = this.GetAllPecaByColor(cor);
     let bestMove = -9999;
     let bestMoveFound;
     let MoveFound;
 
     for(let i = 0; i < newGameMoves.length; i++) {
       let newGameMove = newGameMoves[i];
-      const moves = this.BonsMovimentos(newGameMove);
+      const moves = await this.BonsMovimentos(newGameMove);
 
       for(let j = 0; j < moves.length; j++) {
         let move = moves[j];
@@ -764,7 +780,7 @@ export class TabuleiroComponent implements OnInit {
         this.Tabuleiro[PY1][PX1] = newGameMove;
         this.Tabuleiro[PY][PX] = move;
 
-        let value = this.minimax(depth - 1, -10000, 10000, !isMaximisingPlayer);
+        let value = await this.minimax(depth - 1, -10000, 10000, !isMaximisingPlayer);
 
         // go back
         newGameMove.Posicao.X = PX;
@@ -794,25 +810,27 @@ export class TabuleiroComponent implements OnInit {
     let totalEvaluation = 0;
     for (let i = 0; i < 5; i++) {
       for (let j = 0; j < 5; j++) {
-        totalEvaluation = totalEvaluation + this.GetPecaValor(this.Tabuleiro[i][j]);
+        totalEvaluation = totalEvaluation + this.GetPecaValor(this.Tabuleiro[i][j], j, i);
       }
     }
     return totalEvaluation;
   }
 
-  minimax(depth, alpha, beta, isMaximisingPlayer){
+  async minimax(depth, alpha, beta, isMaximisingPlayer){
     if (depth === 0) {
       return -this.evaluateBoard();
     }
 
-    let newGameMoves = this.GetAllPecaByColor('Black');
+    const cor = isMaximisingPlayer? 'Black' : 'White';
+
+    let newGameMoves = this.GetAllPecaByColor(cor);
 
     if (isMaximisingPlayer) {
       let bestMove = -9999;
 
       for(let i = 0; i < newGameMoves.length; i++) {
         let newGameMove = newGameMoves[i];
-        const moves = this.BonsMovimentos(newGameMove);
+        const moves = await this.BonsMovimentos(newGameMove);
   
         for(let j = 0; j < moves.length; j++) {
           let move = moves[j];
@@ -831,7 +849,7 @@ export class TabuleiroComponent implements OnInit {
           this.Tabuleiro[PY1][PX1] = newGameMove;
           this.Tabuleiro[PY][PX] = move;
   
-          bestMove = Math.max(bestMove, this.minimax(depth - 1, alpha, beta, !isMaximisingPlayer));
+          bestMove = Math.max(bestMove, await this.minimax(depth - 1, alpha, beta, !isMaximisingPlayer));
   
           // go back
           newGameMove.Posicao.X = PX;
@@ -858,7 +876,7 @@ export class TabuleiroComponent implements OnInit {
 
       for(let i = 0; i < newGameMoves.length; i++) {
         let newGameMove = newGameMoves[i];
-        const moves = this.BonsMovimentos(newGameMove);
+        const moves = await this.BonsMovimentos(newGameMove);
   
         for(let j = 0; j < moves.length; j++) {
           let move = moves[j];
@@ -877,7 +895,7 @@ export class TabuleiroComponent implements OnInit {
           this.Tabuleiro[PY1][PX1] = newGameMove;
           this.Tabuleiro[PY][PX] = move;
   
-          bestMove = Math.min(bestMove, this.minimax(depth - 1, alpha, beta, !isMaximisingPlayer));
+          bestMove = Math.min(bestMove, await this.minimax(depth - 1, alpha, beta, !isMaximisingPlayer));
   
           // go back
           newGameMove.Posicao.X = PX;
@@ -902,9 +920,9 @@ export class TabuleiroComponent implements OnInit {
     }
   }
 
-  Game(){
+  async Game(){
     while(this.isBlackTurn){
-      var bestMove = this.minimaxRoot(3, true);
+      var bestMove = await this.minimaxRoot(3, true);
       console.log('best: ', bestMove);
       if(bestMove.bestMoveFound && bestMove.MoveFound){
         const auxPX = bestMove.bestMoveFound.Posicao.X;
@@ -927,8 +945,8 @@ export class TabuleiroComponent implements OnInit {
 
         this.Tabuleiro[auxPY1][auxPX1] = bestMove.bestMoveFound;
 
-        this.File2 = this.File2 + this.PosXLetra(auxPX) + auxPY + this.PosXLetra(auxPX1) + auxPY1 + '\n';
-        this.File1 = this.File1 + 'Black played ' + this.PosXLetra(auxPX) + auxPY + this.PosXLetra(auxPX1) + auxPY1 + '\n';
+        this.File2 = this.File2 + this.PosXLetra(auxPX) + this.PosYNumber(auxPY) + this.PosXLetra(auxPX1) + this.PosYNumber(auxPY1) + '\n';
+        this.File1 = this.File1 + 'Black played ' + this.PosXLetra(auxPX) + this.PosYNumber(auxPY) + this.PosXLetra(auxPX1) + this.PosYNumber(auxPY1) + '\n';
 
         this.isBlackTurn = false;
       }
