@@ -6,6 +6,7 @@ export class Peca {
   active: boolean;
   Nome;
   Sugestao: boolean;
+  Valor: number;
 
   constructor(obj?){
     if(obj){

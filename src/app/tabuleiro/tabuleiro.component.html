@@ -3,7 +3,7 @@
     <div class="column" *ngFor="let subitem of item let j = index" [class.active]="subitem.active">
       <div class="img" innerHTML="{{
           !subitem.Vazio?
-          (subitem.Posicao.X == j && subitem.Posicao.Y == i ? subitem.Peca : ''):(j+'-'+i)
+          (subitem.Posicao.X == j && subitem.Posicao.Y == i ? subitem.Peca : ''):''
         }}"
         [class.sugestao]="subitem.Sugestao"
         (click)="Selecionar(subitem)">
@@ -11,3 +11,5 @@
     </div>
   </div>
 </div>
+
+<button (click)="gerar()"></button>
